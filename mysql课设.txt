@@ -1,0 +1,88 @@
+create database total;
+use total;
+
+create table operate(
+书名 varchar(20) primary key,
+书号 varchar(20),
+作者 varchar(20),
+分类 varchar(20),
+出版社 varchar(30),
+出版时间 DATE,
+库存 int,
+剩余可借 int,
+总借阅次数 int
+);
+
+select * from operate;
+delete from borrow;
+update operate set 剩余可借=50 where 书名='C++课程设计';
+update operate set 总借阅次数=0 where 书名='C++课程设计';
+
+insert into operate values('C++课程设计','IS1030','孙广中','教育','中国科学技术大学','2011-05-01',50,50,0);
+insert into operate values('C程序设计','IS1031','郑重','教育','中国科学技术大学','2011-05-01',50,50,0);
+insert into operate values('亮剑','IS1045','都梁','军事','人民出版社','1998-01-01',50,50,0);
+insert into operate values('信号与系统','IS1033','李卫平','教育','中国科学技术大学','2011-05-01',50,50,0);
+insert into operate values('力学','IS1000','刘斌','教育','中国科学技术大学','1999-01-01',34,34,0);
+insert into operate values('动物学','IS1023','佚名','生物学','高等教育出版社','2011-05-01',50,50,0);
+insert into operate values('动物生理学','IS1025','佚名','生物学','高等教育出版社','2011-05-01',50,50,0);
+insert into operate values('古生物学','IS1026','佚名','生物学','高等教育出版社','2011-05-01',100,100,0);
+insert into operate values('吉米多维奇题解1','IS1008','吉米多维奇','教育','俄罗斯出版社','2010-01-01',50,50,0);
+insert into operate values('吉米多维奇题解2','IS1009','吉米多维奇','教育','俄罗斯出版社','2010-01-01',50,50,0);
+
+select * from operate where 书名='C++课程设计' and 书号= 'IS1030' and 作者='孙广中' and 分类='教育' and 出版社='中国科学技术大学' and 出版时间='2011-05-01';
+
+
+create table borrow(
+书名 varchar(20) primary key,
+书号 varchar(20),
+作者 varchar(20),
+分类 varchar(20),
+出版社 varchar(30),
+出版时间 DATE,
+最新借阅时间 DATE,
+foreign key(书名) references operate(书名)
+);
+
+select * from borrow;
+
+select 最新借阅时间 from borrow where 书名='力学' and 书号= 'IS1000' and 作者='刘斌' and 分类='教育' and 出版社='中国科学技术大学' and 出版时间='1999-01-01';
+
+create table return_bo(
+书名 varchar(20) primary key,
+书号 varchar(20),
+作者 varchar(20),
+分类 varchar(20),
+出版社 varchar(30),
+出版时间 DATE,
+最新借阅时间 DATE,
+归还时间 DATE,
+foreign key(书名) references operate(书名)
+);
+
+create table consumer(
+user_name varchar(20) primary key,
+user_pwd varchar(20)
+);
+
+select * from borrow;
+delete from return_bo;
+
+
+create table manager(
+user_name varchar(20) primary key,
+user_pwd varchar(20)
+);
+
+
+insert into manager values('admin','123456');
+
+create trigger trig1 after
+delete 
+on operate for each row
+begin
+delete from borrow where operate.书名=borrow.书名;
+end;
+
+insert into consumer values('linluocheng','123456');
+select * from consumer;
+delete from consumer where user_name='linluocheng';
